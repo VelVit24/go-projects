@@ -96,10 +96,10 @@ func GetAllBlogs(db *sql.DB, param string) (*[]models.Blog, error) {
 				from unnest(tags) as tag
 				where tag ILIKE '%'||$1||'%' );`, param)
 	}
-	defer row.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer row.Close()
 	for row.Next() {
 		blog := models.Blog{}
 		err := row.Scan(

@@ -19,6 +19,7 @@ type Handler struct {
 
 func writeJson(w http.ResponseWriter, status int, data any) {
 	w.WriteHeader(status)
+	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
 	if err != nil {
 		log.Println(err)
@@ -61,7 +62,8 @@ func (h *Handler) HandlePosts(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) HandlePostsInd(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(strings.TrimPrefix(r.URL.Path, "/posts/"))
 	if err != nil {
-		log.Println(err)
+		http.Error(w, "invalid id", http.StatusBadRequest)
+		return
 	}
 	switch r.Method {
 	case "GET":
