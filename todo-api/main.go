@@ -6,6 +6,7 @@ import (
 
 	"github.com/VelVit24/todo-api/database"
 	"github.com/VelVit24/todo-api/handlers"
+	"github.com/VelVit24/todo-api/middleware"
 )
 
 func main() {
@@ -14,7 +15,8 @@ func main() {
 	h := handlers.Handler{DB: db}
 	http.HandleFunc("/register", h.HandleReg)
 	http.HandleFunc("/login", h.HandleLogin)
-	http.HandleFunc("/todos", h.HandleTodos)
+	http.HandleFunc("/todos", middleware.AuthMiddleware(h.HandleTodos))
+	http.HandleFunc("/todos/", middleware.AuthMiddleware(h.HandleTodosInd))
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)

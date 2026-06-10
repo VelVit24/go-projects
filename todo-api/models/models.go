@@ -16,3 +16,10 @@ type Todo struct {
 type Token struct {
 	Token string `json:"token"`
 }
+
+type TodosResponse struct {
+	Data  []Todo `json:"data"`
+	Page  int    `json:"page"`
+	Limit int    `json:"limit"`
+	Total int    `json:"total"`
+}

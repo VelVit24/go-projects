@@ -22,9 +22,6 @@ func ConnDB() *sql.DB {
 func InsertBlog(db *sql.DB, blog *models.Blog) error {
 	err := db.QueryRow("insert into Blogs (title, content, category, tags, createdAt, updatedAt) values ($1,$2,$3,$4,$5,$6) returning id",
 		blog.Title, blog.Content, blog.Category, blog.Tags, time.Now(), time.Now()).Scan(&blog.Id)
-	if err != nil {
-		return err
-	}
 	return err
 }
 func GetBlog(db *sql.DB, id int) (*models.Blog, error) {
