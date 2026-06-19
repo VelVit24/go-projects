@@ -48,14 +48,14 @@ func (r *Repository) SelectManualLoaders() ([]models.ManualLoader, error) {
 }
 
 func (r *Repository) SelectLoaderImage(id int) (string, string, error) {
-	row := r.db.QueryRow("select picturePathLinux, picturePathWindows from loaders where id=$1", id)
+	row := r.db.QueryRow("select picture_path_linux, picture_path_windows from loaders where id=$1", id)
 	var linux, windows string
 	err := row.Scan(&linux, &windows)
 	return linux, windows, err
 }
 
 func (r *Repository) SelectManualLoaderImage(id int) (string, string, error) {
-	row := r.db.QueryRow("select picturePathLinux, picturePathWindows from manual_loaders where id=$1", id)
+	row := r.db.QueryRow("select picture_path_linux, picture_path_windows from manual_loaders where id=$1", id)
 	var linux, windows string
 	err := row.Scan(&linux, &windows)
 	return linux, windows, err

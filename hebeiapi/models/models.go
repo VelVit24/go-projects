@@ -55,12 +55,12 @@ type BlogTag struct {
 }
 
 type Comment struct {
-	Content   string `json:"content"`
-	CreatedAt string `json:"createdAt"`
-	Id        int    `json:"id"`
-	Name      string `json:"name"`
-	ParentId  int    `json:"parentId"`
-	Replies   string `json:"replies"`
+	Content   string     `json:"content"`
+	CreatedAt string     `json:"createdAt"`
+	Id        int        `json:"id"`
+	Name      string     `json:"name"`
+	ParentId  int        `json:"parentId"`
+	Replies   []*Comment `json:"replies"`
 }
 
 type CommentCreateRequest struct {

@@ -24,4 +24,5 @@ func (s *Service) SendEmail(request *models.ContactMail) (int, error) {
 	// if err != nil {
 	// 	return 500, errors.New("failed to send mail")
 	// }
+	return 200, nil
 }

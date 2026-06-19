@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"strconv"
 
 	"github.com/VelVit24/models"
@@ -41,30 +42,46 @@ func (h *Handler) GetPostSlug(c *gin.Context) {
 	slug := c.Param("slug")
 	post, err := h.serv.GetPostSlug(slug)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			c.JSON(404, gin.H{})
+			return
+		}
 		c.JSON(500, err.Error())
 		return
 	}
 	c.JSON(200, post)
 }
 func (h *Handler) GetComments(c *gin.Context) {
-
-}
-func (h *Handler) CreateComment(c *gin.Context) {
-	//slug := c.Param("slug")
-	request := models.CommentCreateRequest{}
-	if err := c.ShouldBindJSON(&request); err != nil {
-		c.AbortWithStatusJSON(400, "bad request")
-	}
-	responce, err := h.serv.CreateComment(&request)
+	slug := c.Param("slug")
+	responce, err := h.serv.GetComments(slug)
 	if err != nil {
 		c.JSON(500, err.Error())
 		return
 	}
-	c.JSON(204, responce)
+	c.JSON(200, responce)
 }
+func (h *Handler) CreateComment(c *gin.Context) {
+	slug := c.Param("slug")
+	request := models.CommentCreateRequest{}
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.AbortWithStatusJSON(400, "bad request")
+	}
+	responce, err := h.serv.CreateComment(slug, &request)
+	if err != nil {
+		c.JSON(500, err.Error())
+		return
+	}
+	c.JSON(201, responce)
+}
+
 func (h *Handler) GetPostImage(c *gin.Context) {
 	slug := c.Param("slug")
-
+	path, err := h.serv.GetPostImage(slug)
+	if err != nil {
+		c.Status(404)
+		return
+	}
+	c.File(path)
 }
 
 func (h *Handler) PostEmail(c *gin.Context) {
@@ -97,6 +114,23 @@ func (h *Handler) GetManualLoaders(c *gin.Context) {
 	}
 	c.JSON(200, loaders)
 }
-func (h *Handler) GetLoaderImage(c *gin.Context) {
 
-s
+func (h *Handler) GetLoaderImage(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("loader_id"))
+	path, err := h.serv.GetLoaderImage(id)
+	if err != nil {
+		c.Status(404)
+		return
+	}
+	c.File(path)
+}
+
+func (h *Handler) GetManualLoaderImage(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("loader_id"))
+	path, err := h.serv.GetManualLoaderImage(id)
+	if err != nil {
+		c.Status(404)
+		return
+	}
+	c.File(path)
+}
